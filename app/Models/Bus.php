@@ -30,5 +30,6 @@ class Bus extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'image' => 'array'
     ];
 }
