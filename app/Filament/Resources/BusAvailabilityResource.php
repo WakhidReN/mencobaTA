@@ -23,6 +23,8 @@ use App\Filament\Resources\BusAvailabilityResource\RelationManagers;
 class BusAvailabilityResource extends Resource
 {
     protected static ?string $model = BusAvailability::class;
+    protected static ?string $slug = 'ketersediaan-bus';
+
     protected static ?string $label = 'Ketersediaan Bus';
     protected static ?string $navigationLabel = 'Ketersediaan Bus';
     protected static ?string $navigationGroup = 'Data Bus';
