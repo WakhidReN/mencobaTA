@@ -1,0 +1,72 @@
+models:
+  # Region
+  Province:
+    name: string unique
+    relationships:
+      hasMany: City
+
+  City:
+    province_id: foreign constrained onDelete:cascade
+    name: string unique
+    relationships:
+      hasMany: District
+      belongsTo: Province
+
+  District:
+    city_id: foreign constrained onDelete:cascade
+    name: string unique
+    relationships:
+      hasMany: village
+      belongsTo: City
+
+  Village:
+    district_id: foreign constrained onDelete:cascade
+    name: string unique
+    relationships:
+      belongsTo: District
+
+  Bus:
+    image: string nullable
+    name: string:50 index
+    type: enum:"Big Bus","Medium","Legrest"
+    seat_total: string:50
+    pic: string:50
+    pic_phone: string
+
+  BusAvailability:
+    bus_id: foreign constrained onDelete:cascade
+    status: enum:"Available","Booked","Cancel"
+    start_date: datetime
+    end_date: datetime
+    payment_status: enum:"Booked - DP","Booked - Non DP","Cancel"
+    payment_date: datetime
+    total_payment: float
+    relationships:
+      belongsTo: Bus
+
+  Destination:
+    name: string
+    type: enum:"AA","AO","LL","AR","DO","N"
+    marketing_name: string
+    phone_number: string
+    weekday_rate: float
+    weekend_rate: float
+    high_season_rate: float
+
+  Hotel:
+    name: string
+    pic: string
+    pic_phone: string
+    province: string:50
+    city: string:50 nullable
+    district: string:50 nullable
+    village: string:50 nullable
+
+  Restaurant:
+    name: string
+    pic: string
+    pic_phone: string
+    province: string:50
+    city: string:50 nullable
+    district: string:50 nullable
+    village: string:50 nullable

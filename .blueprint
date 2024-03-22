@@ -1,0 +1,38 @@
+created:
+    - database/factories/ProvinceFactory.php
+    - database/factories/CityFactory.php
+    - database/factories/DistrictFactory.php
+    - database/factories/VillageFactory.php
+    - database/factories/BusFactory.php
+    - database/factories/BusAvailabilityFactory.php
+    - database/factories/DestinationFactory.php
+    - database/factories/HotelFactory.php
+    - database/factories/RestaurantFactory.php
+    - database/migrations/2024_03_21_161015_create_provinces_table.php
+    - database/migrations/2024_03_21_161016_create_cities_table.php
+    - database/migrations/2024_03_21_161017_create_districts_table.php
+    - database/migrations/2024_03_21_161018_create_villages_table.php
+    - database/migrations/2024_03_21_161019_create_buses_table.php
+    - database/migrations/2024_03_21_161020_create_bus_availabilities_table.php
+    - database/migrations/2024_03_21_161021_create_destinations_table.php
+    - database/migrations/2024_03_21_161022_create_hotels_table.php
+    - database/migrations/2024_03_21_161023_create_restaurants_table.php
+    - app/Models/Province.php
+    - app/Models/City.php
+    - app/Models/District.php
+    - app/Models/Village.php
+    - app/Models/Bus.php
+    - app/Models/BusAvailability.php
+    - app/Models/Destination.php
+    - app/Models/Hotel.php
+    - app/Models/Restaurant.php
+models:
+    Province: { name: 'string unique', relationships: { hasMany: City } }
+    City: { province_id: 'foreign constrained onDelete:cascade', name: 'string unique', relationships: { hasMany: District, belongsTo: Province } }
+    District: { city_id: 'foreign constrained onDelete:cascade', name: 'string unique', relationships: { hasMany: village, belongsTo: City } }
+    Village: { district_id: 'foreign constrained onDelete:cascade', name: 'string unique', relationships: { belongsTo: District } }
+    Bus: { image: 'string nullable', name: 'string:50 index', type: 'enum:"Big Bus","Medium","Legrest"', seat_total: 'string:50', pic: 'string:50', pic_phone: string }
+    BusAvailability: { bus_id: 'foreign constrained onDelete:cascade', status: 'enum:"Available","Booked","Cancel"', start_date: datetime, end_date: datetime, payment_status: 'enum:"Booked - DP","Booked - Non DP","Cancel"', payment_date: datetime, total_payment: float, relationships: { belongsTo: Bus } }
+    Destination: { name: string, type: 'enum:"AA","AO","LL","AR","DO","N"', marketing_name: string, phone_number: string, weekday_rate: float, weekend_rate: float, high_season_rate: float }
+    Hotel: { name: string, pic: string, pic_phone: string, province: 'string:50', city: 'string:50 nullable', district: 'string:50 nullable', village: 'string:50 nullable' }
+    Restaurant: { name: string, pic: string, pic_phone: string, province: 'string:50', city: 'string:50 nullable', district: 'string:50 nullable', village: 'string:50 nullable' }
