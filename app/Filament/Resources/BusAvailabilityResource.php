@@ -46,7 +46,7 @@ class BusAvailabilityResource extends Resource
                             ->label('Tanggal Pulang')
                             ->required()
                         ,
-                        Select::make('ketersediaan_bus_id')
+                        Select::make('bus_id')
                             ->label('Armada')
                             // ->placeholder(
                             //     function () {
@@ -62,11 +62,12 @@ class BusAvailabilityResource extends Resource
                             // )
                             ->options(
                                 Bus::pluck('name', 'id')
+                                // Bus::whereNotIn('id', BusAvailability::pluck('bus_id'))->pluck('name', 'id')
                                 // function () {
-                                //     // $availableBusId = BusAvailability::pluck('bus_id')->toArray();
-                                //     // $unusedBuses = Bus::whereNotIn('id', $availableBusId)->pluck('name', 'id')->toArray();
+                                //     $availableBusId = BusAvailability::pluck('bus_id')->toArray();
+                                //     $unusedBuses = Bus::whereNotIn('id', $availableBusId)->pluck('name', 'id')->toArray();
 
-                                //     // return $unusedBuses;
+                                //     return $unusedBuses;
                                 // }
                             )
                             ->live()
@@ -76,17 +77,17 @@ class BusAvailabilityResource extends Resource
                             ->label('Jenis Armada')
                             ->live()
                             ->placeholder(
-                                fn (Forms\Get $get): string => empty($get('ketersediaan_bus_id')) ? 'Pilih armada terlebih dahulu' : 'Pilih salah satu opsi'
+                                fn (Forms\Get $get): string => empty($get('bus_id')) ? 'Pilih armada terlebih dahulu' : 'Pilih salah satu opsi'
                             )
                             ->options(
                                 function (Forms\Get $get) {
-                                    $data = Bus::where('id', $get('ketersediaan_bus_id'))->pluck('type', 'id');
+                                    $data = Bus::where('id', $get('bus_id'))->pluck('type', 'id');
                                     return $data;
                                 }
                             )
                             ->required()
                         ,
-                        Select::make('bus_id_2')
+                        Select::make('bus_id')
                             ->label('Seat Set')
                             ->live()
                             ->placeholder(
@@ -94,7 +95,7 @@ class BusAvailabilityResource extends Resource
                             )
                             ->options(
                                 function (Forms\Get $get) {
-                                    $data = Bus::where('id', $get('ketersediaan_bus_id'))->pluck('seat_total', 'id');
+                                    $data = Bus::where('id', $get('bus_id'))->pluck('seat_total', 'id');
                                     return $data;
                                 }
                             )
@@ -111,7 +112,7 @@ class BusAvailabilityResource extends Resource
                     ,
                     Section::make('Pembayaran')
                     ->schema([
-                        Select::make('status_pembayaran')
+                        Select::make('payment_status')
                             ->options([
                                 'Booked - DP' => 'Booked - DP',
                                 'Booked - Non DP' => 'Booked - Non DP',
@@ -185,13 +186,13 @@ class BusAvailabilityResource extends Resource
                     ->label('Remaining Days')
                     ->searchable()
                     ->state(function (BusAvailability $busAvailability) {
-                        $startDate = Carbon::parse($busAvailability->start_date);
-                        $now = Carbon::now();
+                        $startDate = Carbon::parse($busAvailability->start_date)->format('Y-m-d');
+                        $now = Carbon::now()->format('Y-m-d');
 
                         if ($startDate == $now) {
                             return 'Hari ini berangkat';
                         } else {
-                            $remainingInDay = round($now->diffInDays($startDate));
+                            $remainingInDay = Carbon::parse($now)->diffInDays($startDate);
                             return $remainingInDay . ' Hari';
                         }
                     })
@@ -222,7 +223,15 @@ class BusAvailabilityResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->mutateFormDataUsing(
+                        function (array $data): array {
+                            $data['armada'] = '22';
+                    
+                            return $data;
+                        }
+                    )
+                ,
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\ForceDeleteAction::make(),
             ])

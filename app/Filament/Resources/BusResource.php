@@ -145,9 +145,9 @@ class BusResource extends Resource
                     ->label('Foto Bus')
                     ->width(200)
                     ->height(150)
-                    ->stacked()
-                    ->limit(1)
-                    ->limitedRemainingText()
+                    // ->stacked()
+                    ->limit(2)
+                    ->limitedRemainingText(size: 'lg')
             ])
             ->filters([
             ])
