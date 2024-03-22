@@ -27,6 +27,8 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('')
             ->login()
+            ->brandName('Yasuda Travel')
+            // ->brandLogo(asset('img/Tanda Tangan Digital Wakhid.jpg'))
             ->colors([
                 'primary' => Color::Amber,
             ])

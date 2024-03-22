@@ -82,7 +82,7 @@ class BusResource extends Resource
                                         return ['Legrest 36' => 'Legrest 36'];
                                     } else {
                                         return [];
-                                    } 
+                                    }
                                 }
                             )
                             ->required(),
@@ -94,7 +94,7 @@ class BusResource extends Resource
                         TextInput::make('pic_phone')
                             ->label('Kontak PIC')
                             ->placeholder('08234494593')
-                            ->unique()
+                            // ->unique()
                             ->tel()
                             ->maxLength(14)
                             ->required()

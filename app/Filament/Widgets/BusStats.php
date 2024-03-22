@@ -9,7 +9,7 @@ use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 
 class BusStats extends BaseWidget
 {
-    protected static ?int $sort = 1; 
+    protected static ?int $sort = 1;
 
     protected function getStats(): array
     {

@@ -107,7 +107,7 @@ class BusAvailabilityResource extends Resource
                                 'Cancel' => 'Dibatalkan'
                             ])
                             ->label('Status')
-                            ->required()                        
+                            ->required()
                     ])->columns(2)
                     ,
                     Section::make('Pembayaran')
@@ -166,9 +166,9 @@ class BusAvailabilityResource extends Resource
                     ->state(function (BusAvailability $busAvailability): string {
                         $startDate = Carbon::parse($busAvailability->start_date);
                         $endDate = Carbon::parse($busAvailability->end_date);
-                        
+
                         $durationInDays = round($startDate->diffInDays($endDate));
-        
+
                         return (string)$durationInDays;
                     })
                     ->suffix(' Hari')
@@ -227,7 +227,7 @@ class BusAvailabilityResource extends Resource
                     ->mutateFormDataUsing(
                         function (array $data): array {
                             $data['armada'] = '22';
-                    
+
                             return $data;
                         }
                     )
