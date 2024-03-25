@@ -3,12 +3,25 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Panel;
+use Filament\Models\Contracts\HasAvatar;
+use Illuminate\Notifications\Notifiable;
+use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable 
 {
+
+    // public function canAccessPanel(Panel $panel): bool
+    // {
+    //     if ($panel->getId() === 'admin') {
+    //         return str_ends_with($this->email, '@yourdomain.com') && $this->hasVerifiedEmail();
+    //     }
+ 
+    //     return true;
+    // }
+    
     use HasFactory, Notifiable;
 
     /**
@@ -43,5 +56,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getFilamentAvatarUrl(): ?string
+    {
+        return $this->avatar_url;
     }
 }

@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\DestinationResource\Pages;
 use App\Filament\Resources\DestinationResource\RelationManagers;
+use App\Enums\DestinationType;
 
 class DestinationResource extends Resource
 {
@@ -40,14 +41,8 @@ class DestinationResource extends Resource
                             ->required(),
                         Select::make('type')
                             ->label('Type')
-                            ->options([
-                                'AA' => 'AA',
-                                'AO' => 'AO',
-                                'LL' => 'LL',
-                                'AR' => 'AR',
-                                'DO' => 'DO',
-                                'N' => 'N',
-                            ]),
+                            ->options(DestinationType::class)
+                            ->required(),
                         TextInput::make('marketing_name')
                             ->label('Marketing Name')
                             ->placeholder('Marketing Name')

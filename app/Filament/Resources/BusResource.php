@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BusResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\BusResource\RelationManagers;
+use App\Enums\BusType;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
@@ -51,11 +52,7 @@ class BusResource extends Resource
                             ->required(),
                         Select::make('type')
                             ->label('Jenis Armada')
-                            ->options([
-                                'Big Bus' => 'Big Bus',
-                                'Medium' => 'Medium',
-                                'Legrest' => 'Legrest'
-                            ])
+                            ->options(BusType::class)
                             ->live()
                             ->required(),
                         Select::make('seat_total')

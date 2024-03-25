@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\DestinationType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,6 +32,7 @@ class Destination extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'type' => DestinationType::class,
         'weekday_rate' => 'float',
         'weekend_rate' => 'float',
         'high_season_rate' => 'float',

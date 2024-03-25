@@ -6,7 +6,9 @@ use Carbon\Carbon;
 use App\Models\Bus;
 use Filament\Forms;
 use Filament\Tables;
+use App\Enums\BusPaymentStatus;
 use Filament\Forms\Form;
+use App\Enums\BusAvailabilityStatus;
 use Filament\Tables\Table;
 use App\Models\BusAvailability;
 use Filament\Resources\Resource;
@@ -48,27 +50,8 @@ class BusAvailabilityResource extends Resource
                         ,
                         Select::make('bus_id')
                             ->label('Armada')
-                            // ->placeholder(
-                            //     function () {
-                            //         $availableBusId = BusAvailability::pluck('bus_id')->toArray();
-                            //         $unusedBuses = Bus::whereNotIn('id', $availableBusId)->pluck('name', 'id')->toArray();
-
-                            //         if (empty($unusedBuses)) {
-                            //             return 'Bus belum ada yang tersedia';
-                            //         } else {
-                            //             return 'Pilih salah satu opsi';
-                            //         }
-                            //     }
-                            // )
                             ->options(
                                 Bus::pluck('name', 'id')
-                                // Bus::whereNotIn('id', BusAvailability::pluck('bus_id'))->pluck('name', 'id')
-                                // function () {
-                                //     $availableBusId = BusAvailability::pluck('bus_id')->toArray();
-                                //     $unusedBuses = Bus::whereNotIn('id', $availableBusId)->pluck('name', 'id')->toArray();
-
-                                //     return $unusedBuses;
-                                // }
                             )
                             ->live()
                             ->preload()
@@ -101,11 +84,7 @@ class BusAvailabilityResource extends Resource
                             )
                             ->required(),
                         Select::make('status')
-                            ->options([
-                                'Available' => 'Tersedia',
-                                'Booked' => 'Dipesan',
-                                'Cancel' => 'Dibatalkan'
-                            ])
+                            ->options(BusAvailabilityStatus::class)
                             ->label('Status')
                             ->required()
                     ])->columns(2)
@@ -113,11 +92,7 @@ class BusAvailabilityResource extends Resource
                     Section::make('Pembayaran')
                     ->schema([
                         Select::make('payment_status')
-                            ->options([
-                                'Booked - DP' => 'Booked - DP',
-                                'Booked - Non DP' => 'Booked - Non DP',
-                                'Cancel' => 'Dibatalkan'
-                            ])
+                            ->options(BusPaymentStatus::class)
                             ->label('Status Pembayaran')
                             ->required()
                         ,

@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\BusType;
+use App\Enums\SeatBigBus;
+use App\Enums\SeatLegrestBus;
+use App\Enums\SeatMediumBus;
 
 class Bus extends Model
 {
@@ -30,6 +34,7 @@ class Bus extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'image' => 'array'
+        'image' => 'array',
+        'type' => BusType::class,
     ];
 }

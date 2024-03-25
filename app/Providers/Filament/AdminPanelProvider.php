@@ -26,7 +26,10 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('')
+            ->registration()
             ->login()
+            ->passwordReset()
+            ->profile(isSimple: false)
             ->brandName('Yasuda Travel')
             // ->brandLogo(asset('img/Tanda Tangan Digital Wakhid.jpg'))
             ->colors([
