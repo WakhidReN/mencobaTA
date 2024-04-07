@@ -5,10 +5,15 @@ namespace App\Filament\Resources;
 use App\Models\Bus;
 use Filament\Forms;
 use Filament\Tables;
+use App\Enums\BusType;
 use Filament\Forms\Form;
+use App\Enums\SeatBigBus;
 use Filament\Tables\Table;
+use App\Enums\SeatMediumBus;
+use App\Enums\SeatLegrestBus;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Card;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
@@ -18,13 +23,14 @@ use Filament\Notifications\Notification;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\BusResource\Pages;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 use App\Filament\Resources\BusResource\RelationManagers;
-use App\Enums\BusType;
-use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
 use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class BusResource extends Resource
@@ -54,32 +60,22 @@ class BusResource extends Resource
                             ->label('Jenis Armada')
                             ->options(BusType::class)
                             ->live()
-                            ->required(),
+                            ->required()
+                        ,
                         Select::make('seat_total')
+                            ->live()
                             ->label('Seat Set')
                             ->placeholder(
                                 fn (Forms\Get $get): string => empty($get('type')) ? 'Pilih jenis armada terlebih dahulu' : 'Pilih salah satu opsi'
                             )
                             ->options(
-                                function (Forms\Get $get): array {
-                                    if ($get('type') == 'Medium') {
-                                        return [
-                                            '31 (2-2)' => '31 (2-2)',
-                                            '33 (2-2)' => '33 (2-2)',
-                                            '35 (2-2)' => '35 (2-2)'
-                                        ];
-                                    } else if ($get('type') == 'Big Bus') {
-                                        return [
-                                            '50 (2-2)' => '50 (2-2)',
-                                            '52 (2-2)' => '52 (2-2)',
-                                            '60 (2-3)' => '60 (2-3)',
-                                            '61 (2-3)' => '61 (2-3)',
-                                        ];
-                                    } else if ($get('type') == 'Legrest') {
-                                        return ['Legrest 36' => 'Legrest 36'];
-                                    } else {
-                                        return [];
-                                    }
+                                function (Forms\Get $get) {
+                                    return match ($get('type')) {
+                                        'Big Bus' => SeatBigBus::class,
+                                        'Medium' => SeatMediumBus::class,
+                                        'Legrest' => SeatLegrestBus::class,
+                                        default => [],
+                                    };
                                 }
                             )
                             ->required(),
@@ -88,12 +84,12 @@ class BusResource extends Resource
                             ->placeholder('PIC')
                             ->required()
                         ,
-                        TextInput::make('pic_phone')
+                        PhoneInput::make('pic_phone')
                             ->label('Kontak PIC')
-                            ->placeholder('08234494593')
-                            // ->unique()
-                            ->tel()
-                            ->maxLength(14)
+                            ->defaultCountry('ID')
+                            ->initialCountry('id')
+                            ->displayNumberFormat(PhoneInputNumberType::E164)
+                            ->showSelectedDialCode(true)
                             ->required()
                     ]),
                 Section::make()
@@ -134,7 +130,8 @@ class BusResource extends Resource
                     ->label('PIC')
                     ->searchable()
                 ,
-                TextColumn::make('pic_phone')
+                PhoneColumn::make('pic_phone')
+                    ->displayFormat(PhoneInputNumberType::E164)
                     ->label('Kontak PIC')
                     ->searchable()
                 ,

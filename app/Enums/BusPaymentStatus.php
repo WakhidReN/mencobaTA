@@ -10,9 +10,7 @@ enum BusPaymentStatus: string implements HasLabel
     case Cancel = 'Dibatalkan';
     
     public function getLabel(): ?string
-    {
-        return $this->name;
-    
+    {    
         return match ($this) {
             self::Booked_DP => 'Booked - DP',
             self::Booked_Non_DP => 'Booked - Non DP',

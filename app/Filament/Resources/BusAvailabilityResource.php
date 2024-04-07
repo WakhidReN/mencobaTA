@@ -64,7 +64,8 @@ class BusAvailabilityResource extends Resource
                             )
                             ->options(
                                 function (Forms\Get $get) {
-                                    $data = Bus::where('id', $get('bus_id'))->pluck('type', 'id');
+                                    $bus = Bus::find($get('bus_id'));
+                                    $data = $bus ? [$bus->id => $bus->type->value] : [];
                                     return $data;
                                 }
                             )

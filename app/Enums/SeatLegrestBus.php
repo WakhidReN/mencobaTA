@@ -5,14 +5,12 @@ use Filament\Support\Contracts\HasLabel;
  
 enum SeatLegrestBus: string implements HasLabel
 {
-    case FirstOption = 'Legrest 36';
+    case Seat_1 = 'Legrest 36';
     
     public function getLabel(): ?string
     {
-        return $this->name;
-    
         return match ($this) {
-            self::FirstOption => 'Legrest 36'
+            self::Seat_1 => 'Legrest 36'
         };
     }
 }

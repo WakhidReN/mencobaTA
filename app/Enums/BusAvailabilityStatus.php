@@ -5,18 +5,16 @@ use Filament\Support\Contracts\HasLabel;
  
 enum BusAvailabilityStatus: string implements HasLabel
 {
-    case Available = 'Tersedia';
-    case Booked = 'Dipesan';
-    case Cancel = 'Dibatalkan';
+    case Tersedia = 'Available';
+    case Dipesan = 'Booked';
+    case Dibatalkan = 'Cancel';
     
     public function getLabel(): ?string
-    {
-        return $this->name;
-    
+    {    
         return match ($this) {
-            self::Available => 'Tersedia',
-            self::Booked => 'Dipesan',
-            self::Cancel => 'Dibatalkan'
+            self::Tersedia => 'Available',
+            self::Dipesan => 'Booked',
+            self::Dibatalkan => 'Cancel'
         };
     }
 }

@@ -7,16 +7,19 @@ use Filament\Tables;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\Destination;
+use App\Enums\DestinationType;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
+use Ysfkaya\FilamentPhoneInput\Tables\PhoneColumn;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Ysfkaya\FilamentPhoneInput\PhoneInputNumberType;
 use App\Filament\Resources\DestinationResource\Pages;
 use App\Filament\Resources\DestinationResource\RelationManagers;
-use App\Enums\DestinationType;
 
 class DestinationResource extends Resource
 {
@@ -47,12 +50,14 @@ class DestinationResource extends Resource
                             ->label('Marketing Name')
                             ->placeholder('Marketing Name')
                             ->required(),
-                        TextInput::make('phone_number')
+                        PhoneInput::make('phone_number')
                             ->label('Phone Number')
-                            ->placeholder('08234494593')
-                            ->tel()
-                            ->maxLength(14)
-                            ->required(),
+                            ->defaultCountry('ID')
+                            ->initialCountry('id')
+                            ->displayNumberFormat(PhoneInputNumberType::E164)
+                            ->showSelectedDialCode(true)
+                            ->required()
+                        ,
                         TextInput::make('weekday_rate')
                             ->label('Weekday Rate')
                             ->placeholder('Weekday Rate')
@@ -88,8 +93,8 @@ class DestinationResource extends Resource
                 TextColumn::make('marketing_name')
                     ->label('Marketing Name')
                     ->searchable(),
-                TextColumn::make('phone_number')
-                    ->label('Phone Number')
+                PhoneColumn::make('phone_number')
+                    ->displayFormat(PhoneInputNumberType::E164)
                     ->searchable(),
                 TextColumn::make('weekday_rate')
                     ->label('Weekend Rate')

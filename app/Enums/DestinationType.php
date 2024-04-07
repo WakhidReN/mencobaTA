@@ -14,8 +14,6 @@ enum DestinationType: string implements HasLabel
 
     public function getLabel(): ?string
     {
-        return $this->name;
-    
         return match ($this) {
             self::AA => 'AA',
             self::AO => 'AO',
