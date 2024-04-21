@@ -6,15 +6,16 @@ use Carbon\Carbon;
 use App\Models\Bus;
 use Filament\Forms;
 use Filament\Tables;
-use App\Enums\BusPaymentStatus;
 use Filament\Forms\Form;
-use App\Enums\BusAvailabilityStatus;
 use Filament\Tables\Table;
+use App\Enums\BusPaymentStatus;
 use App\Models\BusAvailability;
 use Filament\Resources\Resource;
+use App\Enums\BusAvailabilityStatus;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\DateTimePicker;
@@ -50,40 +51,44 @@ class BusAvailabilityResource extends Resource
                         ,
                         Select::make('bus_id')
                             ->label('Armada')
-                            ->options(
-                                Bus::pluck('name', 'id')
-                            )
-                            ->live()
-                            ->preload()
-                            ->required(),
-                        Select::make('bus_id')
-                            ->label('Jenis Armada')
-                            ->live()
-                            ->placeholder(
-                                fn (Forms\Get $get): string => empty($get('bus_id')) ? 'Pilih armada terlebih dahulu' : 'Pilih salah satu opsi'
-                            )
-                            ->options(
-                                function (Forms\Get $get) {
-                                    $bus = Bus::find($get('bus_id'));
-                                    $data = $bus ? [$bus->id => $bus->type->value] : [];
-                                    return $data;
+                            ->relationship('bus', 'name')
+                            ->getOptionLabelFromRecordUsing(
+                                function ($record) {
+                                    $type = $record->type->value;
+                            
+                                    return "{$record->name} - {$type} - {$record->seat_total}";
                                 }
                             )
                             ->required()
                         ,
-                        Select::make('bus_id')
-                            ->label('Seat Set')
-                            ->live()
-                            ->placeholder(
-                                fn (Forms\Get $get): string => empty($get('bus_id')) ? 'Pilih jenis armada terlebih dahulu' : 'Pilih salah satu opsi'
-                            )
-                            ->options(
-                                function (Forms\Get $get) {
-                                    $data = Bus::where('id', $get('bus_id'))->pluck('seat_total', 'id');
-                                    return $data;
-                                }
-                            )
-                            ->required(),
+                        // Select::make('bus_id')
+                        //     ->label('Jenis Armada')
+                        //     ->live()
+                        //     ->placeholder(
+                        //         fn (Forms\Get $get): string => empty($get('bus_id')) ? 'Pilih armada terlebih dahulu' : 'Pilih salah satu opsi'
+                        //     )
+                        //     ->options(
+                        //         function (Forms\Get $get) {
+                        //             $bus = Bus::find($get('bus_id'));
+                        //             $data = $bus ? [$bus->id => $bus->type->value] : [];
+                        //             return $data;
+                        //         }
+                        //     )
+                        //     ->required()
+                        // ,
+                        // Select::make('bus_id')
+                        //     ->label('Seat Set')
+                        //     ->live()
+                        //     ->placeholder(
+                        //         fn (Forms\Get $get): string => empty($get('bus_id')) ? 'Pilih jenis armada terlebih dahulu' : 'Pilih salah satu opsi'
+                        //     )
+                        //     ->options(
+                        //         function (Forms\Get $get) {
+                        //             $data = Bus::where('id', $get('bus_id'))->pluck('seat_total', 'id');
+                        //             return $data;
+                        //         }
+                        //     )
+                        //     ->required(),
                         Select::make('status')
                             ->options(BusAvailabilityStatus::class)
                             ->label('Status')
